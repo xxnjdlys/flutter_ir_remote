@@ -215,44 +215,50 @@ class _MyHomePageState extends State<MyHomePage> {
                           size: 28,
                         ),
                       ),
-                      InkWell(
-                        onTap: () async {
-                          final String result =
-                              await IrSensorPlugin.transmitListInt(
-                                  list: _getIRCodeArray(IRKeys.KEY_POWER));
-                          print("Power Pressed , $result");
-                        },
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        child: Container(
-                          padding: EdgeInsets.all(2),
-                          width: size.height * 0.11,
-                          height: size.height * 0.11,
-                          decoration: new BoxDecoration(
-                            color: buttonBackground,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.power_settings_new,
-                            color: Color(0xFFEF5252),
-                            size: 38,
+                      Tooltip(
+                        message: "Power On/Off",
+                        child: InkWell(
+                          onTap: () async {
+                            final String result =
+                                await IrSensorPlugin.transmitListInt(
+                                    list: _getIRCodeArray(IRKeys.KEY_POWER));
+                            print("Power Pressed , $result");
+                          },
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          child: Container(
+                            padding: EdgeInsets.all(2),
+                            width: size.height * 0.11,
+                            height: size.height * 0.11,
+                            decoration: new BoxDecoration(
+                              color: buttonBackground,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.power_settings_new,
+                              color: Color(0xFFEF5252),
+                              size: 38,
+                            ),
                           ),
                         ),
                       ),
-                      InkWell(
-                        onTap: () async {
-                          final String result =
-                              await IrSensorPlugin.transmitListInt(
-                                  list: _getIRCodeArray(IRKeys.KEY_HOME));
-                          print("Power Pressed , $result");
-                        },
-                        child: Container(
-                          width: size.height * 0.11,
-                          height: size.height * 0.08,
-                          child: Icon(
-                            Icons.home,
-                            color: icon,
-                            size: 28,
+                      Tooltip(
+                        message: "Home",
+                        child: InkWell(
+                          onTap: () async {
+                            final String result =
+                                await IrSensorPlugin.transmitListInt(
+                                    list: _getIRCodeArray(IRKeys.KEY_HOME));
+                            print("Power Pressed , $result");
+                          },
+                          child: Container(
+                            width: size.height * 0.11,
+                            height: size.height * 0.08,
+                            child: Icon(
+                              Icons.home,
+                              color: icon,
+                              size: 28,
+                            ),
                           ),
                         ),
                       ),
@@ -277,20 +283,23 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
-                            InkWell(
-                              child: Icon(
-                                Icons.add,
-                                color: iconButton,
-                                size: 38,
+                            Tooltip(
+                              message: "Volume Up",
+                              child: InkWell(
+                                child: Icon(
+                                  Icons.add,
+                                  color: iconButton,
+                                  size: 38,
+                                ),
+                                onTap: () async {
+                                  final String result =
+                                      await IrSensorPlugin.transmitListInt(
+                                          list: _getIRCodeArray(
+                                              IRKeys.KEY_VOLUME_UP));
+                                  debugPrint(
+                                      'Emitting  List Int Signal: $result');
+                                },
                               ),
-                              onTap: () async {
-                                final String result =
-                                    await IrSensorPlugin.transmitListInt(
-                                        list: _getIRCodeArray(
-                                            IRKeys.KEY_VOLUME_UP));
-                                debugPrint(
-                                    'Emitting  List Int Signal: $result');
-                              },
                             ),
                             Text(
                               "Vol",
@@ -300,91 +309,27 @@ class _MyHomePageState extends State<MyHomePage> {
                                 fontSize: 24,
                               ),
                             ),
-                            InkWell(
-                              child: Icon(
-                                Icons.remove,
-                                color: iconButton,
-                                size: 38,
+                            Tooltip(
+                              message: "Volume Down",
+                              child: InkWell(
+                                child: Icon(
+                                  Icons.remove,
+                                  color: iconButton,
+                                  size: 38,
+                                ),
+                                onTap: () async {
+                                  final String result =
+                                      await IrSensorPlugin.transmitListInt(
+                                          list: _getIRCodeArray(
+                                              IRKeys.KEY_VOLUME_DOWN));
+                                  debugPrint(
+                                      'Emitting  List Int Signal: $result');
+                                },
                               ),
-                              onTap: () async {
-                                final String result =
-                                    await IrSensorPlugin.transmitListInt(
-                                        list: _getIRCodeArray(
-                                            IRKeys.KEY_VOLUME_DOWN));
-                                debugPrint(
-                                    'Emitting  List Int Signal: $result');
-                              },
-                            )
+                            ),
                           ],
                         ),
                       ),
-                      // FlatButton(
-                      //   onPressed: () async {
-                      //     final String result =
-                      //         await IrSensorPlugin.transmitListInt(
-                      //             list: IRKeys.CENTER);
-                      //     debugPrint('Emitting  List Int Signal: $result');
-                      //   },
-                      //   child: Container(
-                      //     padding: EdgeInsets.all(2),
-                      //     width: size.width * 0.1,
-                      //     height: size.width * 0.1,
-                      //     decoration: new BoxDecoration(
-                      //       gradient: new LinearGradient(
-                      //         begin: Alignment.centerLeft,
-                      //         end: Alignment.centerRight,
-                      //         colors: [
-                      //           Colors.blue,
-                      //           Colors.pink,
-                      //         ],
-                      //       ),
-                      //       shape: BoxShape.circle,
-                      //     ),
-                      //     child: Container(
-                      //       padding: EdgeInsets.all(18),
-                      //       width: size.width * 0.4,
-                      //       height: size.width * 0.4,
-                      //       decoration: new BoxDecoration(
-                      //         color: background,
-                      //         shape: BoxShape.circle,
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-
-                      // Container(
-                      //   width: size.width * 0.20,
-                      //   height: size.height * 0.25,
-                      //   decoration: new BoxDecoration(
-                      //     color: buttonBackground,
-                      //     borderRadius: new BorderRadius.all(
-                      //       Radius.circular(40.0),
-                      //     ),
-                      //   ),
-                      //   child: Column(
-                      //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      //     children: <Widget>[
-                      //       Icon(
-                      //         Icons.keyboard_arrow_up,
-                      //         color: iconButton,
-                      //         size: 38,
-                      //       ),
-                      //       Text(
-                      //         "Ch",
-                      //         style: TextStyle(
-                      //           fontWeight: FontWeight.bold,
-                      //           color: text,
-                      //           fontSize: 24,
-                      //         ),
-                      //       ),
-                      //       Icon(
-                      //         Icons.keyboard_arrow_down,
-                      //         color: iconButton,
-                      //         size: 38,
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),
@@ -400,20 +345,23 @@ class _MyHomePageState extends State<MyHomePage> {
                             padding: EdgeInsets.all(3),
                             width: size.width * 0.2,
                             height: size.width * 0.5,
-                            child: InkWell(
-                              child: Icon(
-                                Icons.keyboard_arrow_up,
-                                color: AppColors.dpadDirectionBackground,
-                                size: 72,
+                            child: Tooltip(
+                              message: "Dpad Up",
+                              child: InkWell(
+                                child: Icon(
+                                  Icons.keyboard_arrow_up,
+                                  color: AppColors.dpadDirectionBackground,
+                                  size: 72,
+                                ),
+                                onTap: () async {
+                                  final String result =
+                                      await IrSensorPlugin.transmitListInt(
+                                          list: _getIRCodeArray(
+                                              IRKeys.KEY_DPAD_UP));
+                                  debugPrint(
+                                      'Emitting  List Int Signal: $result');
+                                },
                               ),
-                              onTap: () async {
-                                final String result =
-                                    await IrSensorPlugin.transmitListInt(
-                                        list: _getIRCodeArray(
-                                            IRKeys.KEY_DPAD_UP));
-                                debugPrint(
-                                    'Emitting  List Int Signal: $result');
-                              },
                             ),
                           );
                         },
@@ -445,20 +393,23 @@ class _MyHomePageState extends State<MyHomePage> {
                             padding: EdgeInsets.all(3),
                             width: size.width * 0.2,
                             height: size.width * 0.5,
-                            child: InkWell(
-                              child: Icon(
-                                Icons.keyboard_arrow_left,
-                                color: AppColors.dpadDirectionBackground,
-                                size: 72,
+                            child: Tooltip(
+                              message: "Dpad Left",
+                              child: InkWell(
+                                child: Icon(
+                                  Icons.keyboard_arrow_left,
+                                  color: AppColors.dpadDirectionBackground,
+                                  size: 72,
+                                ),
+                                onTap: () async {
+                                  final String result =
+                                      await IrSensorPlugin.transmitListInt(
+                                    list: _getIRCodeArray(IRKeys.KEY_DPAD_LEFT),
+                                  );
+                                  debugPrint(
+                                      'Emitting  List Int Signal: $result');
+                                },
                               ),
-                              onTap: () async {
-                                final String result =
-                                    await IrSensorPlugin.transmitListInt(
-                                  list: _getIRCodeArray(IRKeys.KEY_DPAD_LEFT),
-                                );
-                                debugPrint(
-                                    'Emitting  List Int Signal: $result');
-                              },
                             ),
                           );
                         },
@@ -544,20 +495,24 @@ class _MyHomePageState extends State<MyHomePage> {
                             padding: EdgeInsets.all(3),
                             width: size.width * 0.2,
                             height: size.width * 0.5,
-                            child: InkWell(
-                              child: Icon(
-                                Icons.keyboard_arrow_right,
-                                color: AppColors.dpadDirectionBackground,
-                                size: 72,
+                            child: Tooltip(
+                              message: "Dpad Right",
+                              child: InkWell(
+                                child: Icon(
+                                  Icons.keyboard_arrow_right,
+                                  color: AppColors.dpadDirectionBackground,
+                                  size: 72,
+                                ),
+                                onTap: () async {
+                                  final String result =
+                                      await IrSensorPlugin.transmitListInt(
+                                    list:
+                                        _getIRCodeArray(IRKeys.KEY_DPAD_RIGHT),
+                                  );
+                                  debugPrint(
+                                      'Emitting  List Int Signal: $result');
+                                },
                               ),
-                              onTap: () async {
-                                final String result =
-                                    await IrSensorPlugin.transmitListInt(
-                                  list: _getIRCodeArray(IRKeys.KEY_DPAD_RIGHT),
-                                );
-                                debugPrint(
-                                    'Emitting  List Int Signal: $result');
-                              },
                             ),
                           );
                         },
@@ -589,20 +544,23 @@ class _MyHomePageState extends State<MyHomePage> {
                             // padding: EdgeInsets.all(3),
                             width: size.width * 0.4,
                             // height: size.width * 0.1,
-                            child: InkWell(
-                              child: Icon(
-                                Icons.keyboard_arrow_down,
-                                color: AppColors.dpadDirectionBackground,
-                                size: 72,
+                            child: Tooltip(
+                              message: "Dpad Down",
+                              child: InkWell(
+                                child: Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: AppColors.dpadDirectionBackground,
+                                  size: 72,
+                                ),
+                                onTap: () async {
+                                  final String result =
+                                      await IrSensorPlugin.transmitListInt(
+                                    list: _getIRCodeArray(IRKeys.KEY_DPAD_DOWN),
+                                  );
+                                  debugPrint(
+                                      'Emitting  List Int Signal: $result');
+                                },
                               ),
-                              onTap: () async {
-                                final String result =
-                                    await IrSensorPlugin.transmitListInt(
-                                  list: _getIRCodeArray(IRKeys.KEY_DPAD_DOWN),
-                                );
-                                debugPrint(
-                                    'Emitting  List Int Signal: $result');
-                              },
                             ),
                           );
                         },
@@ -622,45 +580,56 @@ class _MyHomePageState extends State<MyHomePage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
-                          InkWell(
-                            onTap: () {
-                              print("Start Pressed");
-                            },
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            child: Icon(
-                              Icons.rotate_right,
-                              color: icon,
+                          Tooltip(
+                            message: "Back",
+                            child: InkWell(
+                              onTap: () {
+                                print("Start Pressed");
+                              },
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              child: Icon(
+                                Icons.rotate_right,
+                                color: icon,
+                              ),
                             ),
                           ),
-                          InkWell(
-                            onTap: () async {
-                              final String result =
-                                  await IrSensorPlugin.transmitListInt(
-                                list: _getIRCodeArray(IRKeys.KEY_DPAD_CENTER),
-                              );
-                              debugPrint('Emitting  List Int Signal: $result');
-                            },
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            child: Icon(
-                              Icons.gamepad_rounded,
-                              color: icon,
+                          Tooltip(
+                            message: "Dpad Center",
+                            child: InkWell(
+                              onTap: () async {
+                                final String result =
+                                    await IrSensorPlugin.transmitListInt(
+                                  list: _getIRCodeArray(IRKeys.KEY_DPAD_CENTER),
+                                );
+                                debugPrint(
+                                    'Emitting  List Int Signal: $result');
+                              },
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              child: Icon(
+                                Icons.gamepad_rounded,
+                                color: icon,
+                              ),
                             ),
                           ),
-                          InkWell(
-                            onTap: () async {
-                              final String result =
-                                  await IrSensorPlugin.transmitListInt(
-                                list: _getIRCodeArray(IRKeys.KEY_DPAD_CENTER),
-                              );
-                              debugPrint('Emitting  List Int Signal: $result');
-                            },
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            child: Icon(
-                              Icons.settings,
-                              color: icon,
+                          Tooltip(
+                            message: "Menu",
+                            child: InkWell(
+                              onTap: () async {
+                                final String result =
+                                    await IrSensorPlugin.transmitListInt(
+                                  list: _getIRCodeArray(IRKeys.KEY_MENU),
+                                );
+                                debugPrint(
+                                    'Emitting  List Int Signal: $result');
+                              },
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              child: Icon(
+                                Icons.menu,
+                                color: icon,
+                              ),
                             ),
                           ),
                         ],
