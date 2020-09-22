@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ir_remote/IRKeys.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'package:ir_sensor_plugin/ir_sensor_plugin.dart';
 import 'package:flutter_ir_remote/AppColors.dart';
 
 void main() {
@@ -41,11 +43,46 @@ class _MyHomePageState extends State<MyHomePage> {
   Color buttonBackground = AppColors.lightButtonBackground;
   Color iconButton = AppColors.lightIconButton;
 
+  String _platformVersion = 'Unknown';
+  bool _hasIrEmitter = false;
+  String _getCarrierFrequencies = 'Unknown';
+
   @override
   void initState() {
     willAcceptStream = new BehaviorSubject<int>();
     willAcceptStream.add(0);
     super.initState();
+
+    initPlatformState();
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlatformState() async {
+    String platformVersion;
+    bool hasIrEmitter;
+    String getCarrierFrequencies;
+
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      platformVersion = await IrSensorPlugin.platformVersion;
+      hasIrEmitter = await IrSensorPlugin.hasIrEmitter;
+      getCarrierFrequencies = await IrSensorPlugin.getCarrierFrequencies;
+    } on PlatformException {
+      platformVersion = 'Failed to get data in a platform.';
+      hasIrEmitter = false;
+      getCarrierFrequencies = 'None';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _platformVersion = platformVersion;
+      _hasIrEmitter = hasIrEmitter;
+      _getCarrierFrequencies = getCarrierFrequencies;
+    });
   }
 
   void _fuctionDrag(String msg) {
@@ -133,33 +170,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                       InkWell(
-                        onTap: () {
-                          setState(
-                            () {
-                              background =
-                                  background == AppColors.darkBackground
-                                      ? AppColors.lightBackground
-                                      : AppColors.darkBackground;
-                              text = text == AppColors.darkext
-                                  ? AppColors.lightText
-                                  : AppColors.darkext;
-                              select = select == AppColors.darkSelect
-                                  ? AppColors.lightSelect
-                                  : AppColors.darkSelect;
-                              icon = icon == AppColors.darkIcon
-                                  ? AppColors.lightIcon
-                                  : AppColors.darkIcon;
-                              iconButton =
-                                  iconButton == AppColors.darkIconButton
-                                      ? AppColors.lightIconButton
-                                      : AppColors.darkIconButton;
-                              buttonBackground = buttonBackground ==
-                                      AppColors.darkButtonBackground
-                                  ? AppColors.lightButtonBackground
-                                  : AppColors.darkButtonBackground;
-                            },
-                          );
-                          print("Power Pressed");
+                        onTap: () async {
+                          final String result =
+                              await IrSensorPlugin.transmitListInt(
+                                  list: IRKeys.POWER);
+                          print("Power Pressed , $result");
                         },
                         splashColor: Colors.transparent,
                         highlightColor: Colors.transparent,
@@ -178,13 +193,21 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                       ),
-                      Container(
-                        width: size.height * 0.11,
-                        height: size.height * 0.08,
-                        child: Icon(
-                          Icons.filter_list,
-                          color: icon,
-                          size: 28,
+                      InkWell(
+                        onTap: () async {
+                          final String result =
+                              await IrSensorPlugin.transmitListInt(
+                                  list: IRKeys.HOME);
+                          print("Power Pressed , $result");
+                        },
+                        child: Container(
+                          width: size.height * 0.11,
+                          height: size.height * 0.08,
+                          child: Icon(
+                            Icons.home,
+                            color: icon,
+                            size: 28,
+                          ),
                         ),
                       ),
                     ],
@@ -208,10 +231,19 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
-                            Icon(
-                              Icons.add,
-                              color: iconButton,
-                              size: 38,
+                            InkWell(
+                              child: Icon(
+                                Icons.add,
+                                color: iconButton,
+                                size: 38,
+                              ),
+                              onTap: () async {
+                                final String result =
+                                    await IrSensorPlugin.transmitListInt(
+                                        list: IRKeys.VOLUME_UP);
+                                debugPrint(
+                                    'Emitting  List Int Signal: $result');
+                              },
                             ),
                             Text(
                               "Vol",
@@ -221,36 +253,53 @@ class _MyHomePageState extends State<MyHomePage> {
                                 fontSize: 24,
                               ),
                             ),
-                            Icon(
-                              Icons.remove,
-                              color: iconButton,
-                              size: 38,
-                            ),
+                            InkWell(
+                              child: Icon(
+                                Icons.remove,
+                                color: iconButton,
+                                size: 38,
+                              ),
+                              onTap: () async {
+                                final String result =
+                                    await IrSensorPlugin.transmitListInt(
+                                        list: IRKeys.VOLUME_DOWN);
+                                debugPrint(
+                                    'Emitting  List Int Signal: $result');
+                              },
+                            )
                           ],
                         ),
                       ),
-                      Container(
-                        padding: EdgeInsets.all(2),
-                        width: size.width * 0.1,
-                        height: size.width * 0.1,
-                        decoration: new BoxDecoration(
-                          gradient: new LinearGradient(
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                            colors: [
-                              Colors.blue,
-                              Colors.pink,
-                            ],
-                          ),
-                          shape: BoxShape.circle,
-                        ),
+                      FlatButton(
+                        onPressed: () async {
+                          final String result =
+                              await IrSensorPlugin.transmitListInt(
+                                  list: IRKeys.CENTER);
+                          debugPrint('Emitting  List Int Signal: $result');
+                        },
                         child: Container(
-                          padding: EdgeInsets.all(18),
-                          width: size.width * 0.4,
-                          height: size.width * 0.4,
+                          padding: EdgeInsets.all(2),
+                          width: size.width * 0.1,
+                          height: size.width * 0.1,
                           decoration: new BoxDecoration(
-                            color: background,
+                            gradient: new LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: [
+                                Colors.blue,
+                                Colors.pink,
+                              ],
+                            ),
                             shape: BoxShape.circle,
+                          ),
+                          child: Container(
+                            padding: EdgeInsets.all(18),
+                            width: size.width * 0.4,
+                            height: size.width * 0.4,
+                            decoration: new BoxDecoration(
+                              color: background,
+                              shape: BoxShape.circle,
+                            ),
                           ),
                         ),
                       ),
@@ -312,7 +361,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         onWillAccept: (item) {
                           debugPrint('↑↑↑↑↑↑↑↑↑↑');
                           this.willAcceptStream.add(-50);
-                          _fuctionDrag("↑↑↑↑↑↑↑↑↑↑");
+                          IrSensorPlugin.transmitListInt(list: IRKeys.UP);
                           return false;
                         },
                         onLeave: (item) {
@@ -345,7 +394,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         onWillAccept: (item) {
                           debugPrint('←←←←←←←←←←');
                           this.willAcceptStream.add(-50);
-                          _fuctionDrag("←←←←←←←←←←");
+                          IrSensorPlugin.transmitListInt(list: IRKeys.LEFT);
                           return false;
                         },
                         onLeave: (item) {
@@ -432,7 +481,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         onWillAccept: (item) {
                           debugPrint('→→→→→→→→→→');
                           this.willAcceptStream.add(50);
-                          _fuctionDrag("→→→→→→→→→→");
+                          IrSensorPlugin.transmitListInt(list: IRKeys.RIGHT);
                           return false;
                         },
                         onLeave: (item) {
@@ -465,7 +514,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         onWillAccept: (item) {
                           debugPrint('↓↓↓↓↓↓↓↓↓↓↓');
                           this.willAcceptStream.add(-50);
-                          _fuctionDrag("↓↓↓↓↓↓↓↓↓↓↓");
+                          IrSensorPlugin.transmitListInt(list: IRKeys.DOWN);
                           return false;
                         },
                         onLeave: (item) {
@@ -488,13 +537,16 @@ class _MyHomePageState extends State<MyHomePage> {
                             splashColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             child: Icon(
-                              Icons.rss_feed,
-                              color: Color(0xFF584BD2),
+                              Icons.rotate_right,
+                              color: icon,
                             ),
                           ),
                           InkWell(
-                            onTap: () {
-                              print("Settings Pressed");
+                            onTap: () async {
+                              final String result =
+                                  await IrSensorPlugin.transmitListInt(
+                                      list: IRKeys.MENU);
+                              debugPrint('Emitting  List Int Signal: $result');
                             },
                             splashColor: Colors.transparent,
                             highlightColor: Colors.transparent,
