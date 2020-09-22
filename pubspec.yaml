@@ -27,6 +27,7 @@ dependencies:
   rxdart: ^0.22.2
 
   ir_sensor_plugin: ^0.1.4+1
+  flutter_dropdown: ^0.0.8
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -37,6 +38,11 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: "^0.7.3"
+
+flutter_icons:
+  android: "ic_launcher"
+  ios: true
+  image_path: "assets/icon/ic_launcher.png"
 
 #flutter_icons:
 #  android: "launcher_icon"
