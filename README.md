@@ -6,7 +6,7 @@ A Flutter application which allows you control Tv/Box By IR.
 
 - install dependencies by
 ```
-flutter pug get
+flutter pub get
 ```
 
 - run project by
